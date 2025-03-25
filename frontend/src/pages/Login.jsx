@@ -70,7 +70,7 @@ const Login = () => {
           </div>
         </div>
 
-        <Button className="w-full mt-6" isLoading={isLoading}>
+        <Button className="w-full mt-6 cursor-pointer" isLoading={isLoading}>
           Sign In
         </Button>
 

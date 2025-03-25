@@ -34,7 +34,7 @@ const ForgotPassword = () => {
           required
         />
         <Button
-          className="w-full mt-6"
+          className="w-full mt-6 cursor-pointer"
           isLoading={isLoading}
           onClick={handleSubmit}
           type="submit"

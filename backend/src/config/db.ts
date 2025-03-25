@@ -15,9 +15,7 @@ const pool = new Pool({
   port: Number(process.env.DB_PORT) || 5432,
 });
 
-pool.on('connect', () => {
-  console.log('✅ Connected to PostgreSQL database');
-});
+
 
 pool.on('error', (err) => {
   console.error('❌ Database connection error:', err);
@@ -33,7 +31,8 @@ const createUsersTable = async () => {
             phone VARCHAR(15)  NOT NULL,
             password TEXT NOT NULL,
             reset_token TEXT,
-            reset_token_expiry TIMESTAMP
+            reset_token_expiry TIMESTAMP,
+            role VARCHAR(10) DEFAULT 'user' NOT NULL
         );
     `;
 

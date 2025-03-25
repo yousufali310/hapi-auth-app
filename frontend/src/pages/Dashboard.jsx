@@ -65,11 +65,13 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Retrieve user from localStorage
+    
     const storedUser = JSON.parse(localStorage.getItem("user"));
+    console.log(storedUser);
+
     setUser(storedUser);
 
-    // Update time every minute
+    
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 60000);
@@ -108,15 +110,15 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden">
-        {/* Header Section */}
+       
         <div className="bg-blue-50 p-6 border-b border-gray-100">
           <div className="flex items-center space-x-4">
-            {/* Avatar */}
+            
             <div className="w-16 h-16 rounded-full bg-blue-200 flex items-center justify-center text-blue-800 font-bold text-2xl shadow-md">
               {getInitials(user.name)}
             </div>
 
-            {/* User Info */}
+          
             <div className="flex-1">
               <h1 className="text-2xl font-bold text-gray-800">
                 {getGreeting()}, {user.name}
@@ -124,7 +126,7 @@ const Dashboard = () => {
               <p className="text-sm text-gray-500">{user.email}</p>
             </div>
 
-            {/* Logout Button */}
+         
             <button
               onClick={handleLogout}
               disabled={isLoading}
@@ -139,9 +141,9 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Additional Info Section */}
+     
         <div className="p-6 grid grid-cols-2 gap-4">
-          {/* User Details Card */}
+         
           <div className="bg-blue-50 p-4 rounded-lg flex items-center space-x-3">
             <UserIcon className="w-6 h-6 text-blue-600" />
             <div>
@@ -150,7 +152,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Time Card */}
+          
           <div className="bg-green-50 p-4 rounded-lg flex items-center space-x-3">
             <ClockIcon className="w-6 h-6 text-green-600" />
             <div>

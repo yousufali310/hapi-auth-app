@@ -59,7 +59,11 @@ const ConfirmPassword = () => {
             required
           />
         </div>
-        <Button className="w-full mt-6" type="submit" isLoading={isLoading}>
+        <Button
+          className="w-full mt-6 cursor-pointer"
+          type="submit"
+          isLoading={isLoading}
+        >
           Reset Password
         </Button>
 

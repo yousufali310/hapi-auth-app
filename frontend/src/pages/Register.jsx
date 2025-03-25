@@ -119,7 +119,7 @@ const Register = () => {
           </div>
         </div>
 
-        <Button className="w-full mt-4" isLoading={isLoading}>
+        <Button className="w-full mt-4 cursor-pointer" isLoading={isLoading}>
           Create Account
         </Button>
 

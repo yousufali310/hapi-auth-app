@@ -38,7 +38,7 @@ export const registerUser = async ({ name, email, password, confirmPassword, pho
             throw new Error('JWT_SECRET is not defined');
         }
 
-        const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
         return { user, token };
     } finally {
         client.release();
@@ -65,7 +65,7 @@ export const loginUser = async ({ email, password }: LoginUserInput) => {
             throw new Error('JWT_SECRET is not defined');
         }
 
-        const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
         return { user, token };
     } finally {
         client.release();
