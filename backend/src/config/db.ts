@@ -1,15 +1,27 @@
-import pg from 'pg';
+import pkg from 'pg';
+
 import dotenv from 'dotenv';
 
+
 dotenv.config();
-const { Pool } = pg;
+
+const { Pool } = pkg;
 
 const pool = new Pool({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    password: process.env.DB_PASS,
-    port: process.env.DB_PORT
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: Number(process.env.DB_PORT) || 5432,
+});
+
+pool.on('connect', () => {
+  console.log('✅ Connected to PostgreSQL database');
+});
+
+pool.on('error', (err) => {
+  console.error('❌ Database connection error:', err);
+  process.exit(1);
 });
 
 const createUsersTable = async () => {
@@ -18,7 +30,7 @@ const createUsersTable = async () => {
             id SERIAL PRIMARY KEY,
             name VARCHAR(100) NOT NULL,
             email VARCHAR(255) UNIQUE NOT NULL,
-            phone VARCHAR(15) UNIQUE NOT NULL,
+            phone VARCHAR(15)  NOT NULL,
             password TEXT NOT NULL,
             reset_token TEXT,
             reset_token_expiry TIMESTAMP

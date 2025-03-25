@@ -2,26 +2,28 @@ import React, { useState } from "react";
 import { forgotPassword } from "../services/authService";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import Button from "../components/Button";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       await forgotPassword({ email });
       toast.success("Password reset link sent!");
     } catch (error) {
       toast.error(error.response?.data?.error || "Failed to send reset link");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-lg shadow-md w-96"
-      >
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center">
+      <form className="max-w-md w-full mx-auto bg-white p-8 rounded-2xl shadow-xl">
         <h2 className="text-2xl font-bold text-center mb-4">Forgot Password</h2>
         <input
           className="w-full p-2 border rounded mb-2"
@@ -31,24 +33,25 @@ const ForgotPassword = () => {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <button
-          className="w-full bg-blue-500 text-white p-2 rounded"
+        <Button
+          className="w-full mt-6"
+          isLoading={isLoading}
+          onClick={handleSubmit}
           type="submit"
         >
           Send Reset Link
-        </button>
-        <p className="text-center mt-4">
-          Don't have an account?{" "}
-          <a href="/register" className="text-blue-500 hover:text-blue-700">
-            Register here
-          </a>
-        </p>
-        <p className="text-center mt-4">
-          Already have an account?{" "}
-          <a href="/login" className="text-blue-500 hover:text-blue-700">
-            Login here
-          </a>
-        </p>
+        </Button>
+        <div className="mt-6 text-center text-sm">
+          <p className="text-gray-600">
+            Remember your password?{" "}
+            <Link
+              to="/login"
+              className="text-blue-600 hover:text-blue-700 font-medium"
+            >
+              Login here
+            </Link>
+          </p>
+        </div>
       </form>
     </div>
   );

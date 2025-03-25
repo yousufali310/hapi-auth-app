@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { login } from "../services/authService";
 import { toast } from "react-toastify";
+import Button from "../components/Button";
 
 const Login = () => {
   const [userData, setUserData] = useState({ email: "", password: "" });
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -13,6 +15,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const response = await login(userData);
       localStorage.setItem("token", response.data.token);
@@ -21,53 +24,72 @@ const Login = () => {
       navigate("/dashboard");
     } catch (error) {
       toast.error(error.response?.data?.error || "Login failed");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-lg shadow-md w-96"
+        className="max-w-md w-full mx-auto bg-white p-8 rounded-2xl shadow-xl"
       >
-        <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
-        <input
-          className="w-full p-2 border rounded mb-2"
-          type="email"
-          name="email"
-          placeholder="Email"
-          onChange={handleChange}
-          required
-        />
-        <input
-          className="w-full p-2 border rounded mb-2"
-          type="password"
-          name="password"
-          placeholder="Password"
-          onChange={handleChange}
-          required
-        />
-        <button
-          className="w-full bg-blue-500 text-white p-2 rounded"
-          type="submit"
-        >
-          Login
-        </button>
-        <div className="text-center mt-4 space-y-2">
-          <p>
+        <div className="mb-8 text-center">
+          <h1 className="text-4xl font-bold text-blue-600 mb-2"></h1>
+          <h2 className="text-3xl font-bold text-gray-800">Welcome Back</h2>
+          <p className="text-gray-500 mt-2">Please sign in to continue</p>
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Email
+            </label>
+            <input
+              className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              type="email"
+              name="email"
+              placeholder="Email"
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Password
+            </label>
+            <input
+              className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              type="password"
+              name="password"
+              placeholder="Password"
+              onChange={handleChange}
+              required
+            />
+          </div>
+        </div>
+
+        <Button className="w-full mt-6" isLoading={isLoading}>
+          Sign In
+        </Button>
+
+        <div className="mt-6 text-center text-sm">
+          <p className="text-gray-600">
             Don't have an account?{" "}
-            <a href="/register" className="text-blue-500 hover:text-blue-700">
-              Register here
-            </a>
-          </p>
-          <p>
-            <a
-              href="/forgot-password"
-              className="text-blue-500 hover:text-blue-700"
+            <Link
+              to="/register"
+              className="text-blue-600 hover:text-blue-700 font-medium"
             >
-              Forgot Password?
-            </a>
+              Register here
+            </Link>
           </p>
+          <Link
+            to="/forgot-password"
+            className="text-blue-600 hover:text-blue-700 font-medium mt-2 block"
+          >
+            Forgot password?
+          </Link>
         </div>
       </form>
     </div>
