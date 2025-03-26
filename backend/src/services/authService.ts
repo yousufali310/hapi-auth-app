@@ -49,6 +49,8 @@ export const loginUser = async ({ email, password }: LoginUserInput) => {
     const client = await pool.connect();
     
     try {
+        console.log(email, password);
+        
         const result = await client.query('SELECT * FROM users WHERE email = $1', [email]);
         const user = result.rows[0];
 

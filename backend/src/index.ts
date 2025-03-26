@@ -1,8 +1,7 @@
 import Hapi from '@hapi/hapi';
 import { authRoutes } from './routes/authRoutes.js';
 import { passwordRoutes } from './routes/passwordRoutes.js';
-
-
+import fileRoutes from './routes/fileRoutes.js';
 
 const server = Hapi.server({
     port: process.env.PORT || 8000,
@@ -12,11 +11,12 @@ const server = Hapi.server({
             origin: ['*'],
             headers: ['Accept', 'Content-Type', 'Authorization'],
             credentials: true
-        }
+        },
+
     }
 });
 
-server.route([...authRoutes,...passwordRoutes]);
+server.route([...authRoutes,...passwordRoutes, ...fileRoutes]);
 
 
 
@@ -26,3 +26,4 @@ const start = async () => {
 };
 
 start();
+

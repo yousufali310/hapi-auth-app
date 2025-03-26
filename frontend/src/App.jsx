@@ -12,6 +12,7 @@ import { ToastContainer } from "react-toastify";
 import ConfirmPassword from "./pages/ConfirmPassword";
 import "react-toastify/dist/ReactToastify.css";
 import AdminDashboard from "./pages/AdminDashboard";
+import FileManagementApp from "./pages/File";
 
 const storedUser = JSON.parse(localStorage.getItem("user"));
 
@@ -22,7 +23,7 @@ const isAdmin = () => storedUser.role === "admin";
 const PrivateRoute = ({ children }) => {
   return isAuthenticated() ? children : <Navigate to="/login" replace />;
 };
-console.log(isAdmin(), isAuthenticated());
+// console.log(isAdmin(), isAuthenticated());
 
 const AdminRoute = ({ children }) => {
   return isAuthenticated() && isAdmin() ? (
@@ -43,6 +44,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/confirm-password/:token" element={<ConfirmPassword />} />
+        <Route path = '/dashboard/files' element = {<FileManagementApp />} />
 
         <Route
           path="/dashboard"
@@ -54,7 +56,7 @@ const App = () => {
         />
 
         <Route
-          path="/admin/dashboard"
+          path="/dashboard/admin"
           element={
             <AdminRoute>
               <AdminDashboard />
