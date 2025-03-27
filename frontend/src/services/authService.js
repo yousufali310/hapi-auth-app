@@ -16,6 +16,11 @@ export const resetPassword = async (token, data) => {
   return await axios.post(`${API_BASE_URL}/reset-password/${token}`, data);
 };
 export const getAllUsers = async (token) =>
-  axios.get(`${API_BASE_URL}/admin/users`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  axios.post(
+    `${API_BASE_URL}/admin/users`,
+    {},
+    {
+      // Empty object for payload
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );

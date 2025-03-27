@@ -1,13 +1,12 @@
 import * as authService from '../services/authService.js';
-
 import { Request, ResponseToolkit } from '@hapi/hapi';
 
 interface RegisterPayload {
     name: string;
-    email: any;
-    password: any;
-    confirmPassword: any;
-    phone: any;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    phone: string;
 }
 
 interface LoginPayload {
@@ -27,7 +26,12 @@ export const register = async (request: Request, h: ResponseToolkit) => {
 export const login = async (request: Request, h: ResponseToolkit) => {
     try {
         const { user, token } = await authService.loginUser(request.payload as LoginPayload);
-        return h.response({ success: true, message: 'Login successful', user, token }).code(200);
+        
+        
+        const response=  h.response({ success: true, message: 'Login successful', user, token }).code(200);
+        
+        return response;
+        
     } catch (err) {
         return h.response({ success: false, error: (err as Error).message }).code(400);
     }

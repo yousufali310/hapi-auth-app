@@ -1,5 +1,5 @@
 import pool from '../config/db.js';
-import { ResponseToolkit } from '@hapi/hapi';
+import { Request, ResponseToolkit } from '@hapi/hapi';
 
 export const getUsers = async (request: Request, h: ResponseToolkit) => {
     try {
