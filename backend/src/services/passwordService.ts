@@ -52,5 +52,3 @@ export const resetPassword = async (token: string, newPassword: string) => {
 
     return { message: 'Password reset successful', success: true };
 };
-
-

@@ -40,7 +40,7 @@ export const registerUser = async ({ name, email, password, confirmPassword, pho
 
         const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        delete user.password;  // Remove password for security
+        delete user.password;  
 
         return { user, token };
     } finally {
