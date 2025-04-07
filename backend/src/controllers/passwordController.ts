@@ -22,6 +22,8 @@ export const requestReset = async (request: Request, h: ResponseToolkit) => {
 export const resetPassword = async (request: Request, h: ResponseToolkit) => {
     try {
         const { password } = request.payload as ResetPasswordPayload;
+        console.log(password);
+        
         const response = await passwordService.resetPassword(request.params.token, password);
         return h.response(response).code(200);
     } catch (err) {

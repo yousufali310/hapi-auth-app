@@ -46,9 +46,9 @@ export const passwordRoutes: ServerRoute[] = [
                 }),
                 payload: Joi.object({
                    password: Joi.string().min(1).required().description('Password (min 6 characters)'), 
-                    confirmPassword: Joi.string().valid(Joi.ref('password')).required()
-                                            .description('Must match password')
-                                           .example('yourpassword123'), 
+                    // confirmPassword: Joi.string().valid(Joi.ref('password')).required()
+                    //                         .description('Must match password')
+                    //                        .example('yourpassword123'), 
                 }).label('ResetPasswordPayload')
             },
             response: {

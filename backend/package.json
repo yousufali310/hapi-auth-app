@@ -17,6 +17,7 @@
     "@hapi/vision": "^7.0.3",
     "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.9",
+    "aws-sdk": "^2.1692.0",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.7",
     "hapi-swagger": "^17.3.2",

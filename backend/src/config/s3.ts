@@ -1,7 +1,7 @@
 import { S3Client } from '@aws-sdk/client-s3';
-import { config } from 'dotenv';
+import dotenv from 'dotenv';
 
-config();
+dotenv.config();
 
 export const s3 = new S3Client({
   region: process.env.AWS_REGION!,

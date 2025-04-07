@@ -53,33 +53,36 @@ const fileRoutes: ServerRoute[] = [
       pre: [{ method: authMiddleware }],
       response: {
         schema: Joi.object({
-          files: Joi.array().items(
-            Joi.object({
-              fileId: Joi.string()
-                .required()
-                .example('bca-5-sem-numerical-and-statistical-methods-bcad501d-2023 (1).pdf')
-                .description('Unique identifier of the file'),
+          files: Joi.array()
+            .items(
+              Joi.object({
+                fileId: Joi.string()
+                  .required()
+                  .example('bca-5-sem-numerical-and-statistical-methods-bcad501d-2023 (1).pdf')
+                  .description('Unique identifier of the file'),
 
-              size: Joi.number()
-                .required()
-                .example(80648)
-                .description('Size of the file in bytes'),
+                size: Joi.number()
+                  .required()
+                  .example(80648)
+                  .description('Size of the file in bytes'),
 
-              lastModified: Joi.date()
-                .iso()
-                .required()
-                .example('2025-03-28T08:55:12.000Z')
-                .description('Last modified timestamp'),
+                lastModified: Joi.date()
+                  .iso()
+                  .required()
+                  .example('2025-03-28T08:55:12.000Z')
+                  .description('Last modified timestamp'),
 
-              url: Joi.string()
-                .uri()
-                .required()
-                .example('https://hapi-js-bucket.s3.ap-south-1.amazonaws.com/sample.pdf?X-Amz-Signature=example')
-                .description('Signed URL to access the file')
-            })
-          ).min(1).required()
+                url: Joi.string()
+                  .uri()
+                  .required()
+                  .example('https://hapi-js-bucket.s3.ap-south-1.amazonaws.com/sample.pdf?X-Amz-Signature=example')
+                  .description('Signed URL to access the file')
+              })
+            )
+            .required() // array is always returned — can be empty []
         }).label('FileListResponse')
       }
+
     }
   },
   {
