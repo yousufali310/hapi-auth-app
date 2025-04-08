@@ -3,66 +3,100 @@ import {
   Routes,
   Route,
   Navigate,
-} from "react-router-dom";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import ForgotPassword from "./pages/ForgotPassword";
-import Dashboard from "./pages/Dashboard";
-import { ToastContainer } from "react-toastify";
-import ConfirmPassword from "./pages/ConfirmPassword";
-import "react-toastify/dist/ReactToastify.css";
-import AdminDashboard from "./pages/AdminDashboard";
-import FileManagementApp from "./pages/File";
+  useLocation,
+} from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const storedUser = JSON.parse(localStorage.getItem("user"));
+import Login from './pages/Login';
+import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
+import ConfirmPassword from './pages/ConfirmPassword';
 
-const isAuthenticated = () => !!localStorage.getItem("token");
+import Dashboard from './pages/Dashboard';
+import FileManagementApp from './pages/File';
+import AdminDashboard from './pages/AdminDashboard';
+import Layout from './Layout';
+import { useEffect } from 'react';
+import { useRef } from 'react';
 
-const isAdmin = () => storedUser.role === "admin";
+const storedUser = JSON.parse(localStorage.getItem('user'));
 
-const PrivateRoute = ({ children }) => {
-  return isAuthenticated() ? children : <Navigate to="/login" replace />;
+const getUser = () => JSON.parse(localStorage.getItem('user'));
+const isAuthenticated = () => !!localStorage.getItem('token');
+const isAdmin = () => getUser()?.role === 'admin';
+
+export const PrivateRoute = ({ children }) => {
+  const location = useLocation();
+
+  if (!isAuthenticated()) {
+    toast.error('Please login to access this page.');
+    return <Navigate to="/login" replace state={{ from: location }} />;
+  }
+
+  return children;
 };
-// console.log(isAdmin(), isAuthenticated());
 
-const AdminRoute = ({ children }) => {
-  return isAuthenticated() && isAdmin() ? (
-    children
-  ) : (
-    <Navigate to="/dashboard" replace />
-  );
+export const AdminRoute = ({ children }) => {
+  const location = useLocation();
+  const hasShownToast = useRef(false); // this prevents double toast
+
+  useEffect(() => {
+    if (!hasShownToast.current) {
+      if (!isAuthenticated()) {
+        toast.error('Please login to access this page.');
+      } else if (!isAdmin()) {
+        toast.error('You are not authorized to access this page.');
+      }
+      hasShownToast.current = true;
+    }
+  }, []);
+
+  if (!isAuthenticated()) {
+    return <Navigate to="/login" replace state={{ from: location }} />;
+  }
+
+  if (!isAdmin()) {
+    return <Navigate to="/dashboard" replace state={{ from: location }} />;
+  }
+
+  return children;
 };
 
 const App = () => {
   return (
     <Router>
       <ToastContainer position="top-right" autoClose={3000} />
-      <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
 
+      <Routes>
+        {/* Public Routes (Without Navbar) */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/confirm-password/:token" element={<ConfirmPassword />} />
-        <Route path = '/dashboard/files' element = {<FileManagementApp />} />
 
+        {/* Protected Routes (With Navbar) */}
         <Route
           path="/dashboard"
           element={
             <PrivateRoute>
-              <Dashboard />
+              <Layout />
             </PrivateRoute>
           }
-        />
+        >
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="files" element={<FileManagementApp />} />
 
-        <Route
-          path="/dashboard/admin"
-          element={
-            <AdminRoute>
-              <AdminDashboard />
-            </AdminRoute>
-          }
-        />
+          <Route
+            path="admin"
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            }
+          />
+        </Route>
       </Routes>
     </Router>
   );

@@ -429,10 +429,6 @@ const FileManagementApp = () => {
             )}
           </div>
         </div>
-
-        <p className="text-center text-gray-500 text-xs mt-6">
-          © {new Date().getFullYear()} Your File Manager. All rights reserved.
-        </p>
       </div>
     </div>
   );

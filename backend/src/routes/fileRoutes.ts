@@ -1,6 +1,6 @@
 import { ServerRoute } from '@hapi/hapi';
 import { fileController } from '../controllers/fileController.js';
-import { authMiddleware } from '../middleware/adminMiddleware.js'; // Import Auth Middleware
+import { authMiddleware } from '../middleware/adminMiddleware.js'; 
 import Joi from 'joi';
 
 
@@ -14,19 +14,19 @@ const fileRoutes: ServerRoute[] = [
       description: 'Upload a file',
       notes: 'Uploads a file to the server and returns the file URL.',
       payload: {
-        maxBytes: 10485760, // 10MB max size
+        maxBytes: 10485760, 
         output: 'stream',
         parse: true,
-        allow: 'multipart/form-data', // ✅ Important for file uploads
+        allow: 'multipart/form-data', 
         multipart: true
       },
       validate: {
         payload: Joi.object({
           file: Joi.any()
-            .meta({ swaggerType: 'file' }) // ✅ Makes it appear in Swagger as a file input
+            .meta({ swaggerType: 'file' }) 
             .description('File to be uploaded')
             .required(),
-        }).unknown(true) // Allow additional form-data fields
+        }).unknown(true) 
       },
       response: {
         schema: Joi.object({
@@ -37,7 +37,7 @@ const fileRoutes: ServerRoute[] = [
       },
       plugins: {
         'hapi-swagger': {
-          payloadType: 'form', // ✅ Ensures Swagger UI shows a file upload input
+          payloadType: 'form', 
         }
       }
     }
@@ -90,10 +90,10 @@ const fileRoutes: ServerRoute[] = [
     path: '/api/files/{fileId}/download',
     handler: fileController.getDownloadUrl,
     options: {
-      tags: ['api', 'Files'], // Organizing in Swagger UI
+      tags: ['api', 'Files'], 
       description: 'Get a signed URL for file download',
       notes: 'Returns a pre-signed URL to securely download the file from S3.',
-      pre: [{ method: authMiddleware }], // Middleware for authentication
+      pre: [{ method: authMiddleware }], 
       validate: {
         params: Joi.object({
           fileId: Joi.string()
@@ -118,10 +118,10 @@ const fileRoutes: ServerRoute[] = [
     path: '/api/files/{fileId}',
     handler: fileController.deleteFile,
     options: {
-      tags: ['api', 'Files'], // Organizing in Swagger UI
+      tags: ['api', 'Files'],
       description: 'Delete a file',
       notes: 'Deletes a file from the system based on the fileId.',
-      pre: [{ method: authMiddleware }], // Middleware for authentication
+      pre: [{ method: authMiddleware }], 
       validate: {
         params: Joi.object({
           fileId: Joi.string()
