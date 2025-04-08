@@ -129,6 +129,9 @@ const FileManagementApp = () => {
       uploadFile(file);
     }
   };
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
+  };
 
   const handleDelete = async (fileId) => {
     if (!window.confirm('Are you sure you want to delete this file?')) return;
@@ -297,13 +300,14 @@ const FileManagementApp = () => {
           {/* Drag & Drop Area */}
           <div
             ref={dropAreaRef}
-            className={`relative p-8 transition-all ${
+            className={`relative p-8 transition-all cursor-pointer ${
               uploading ? 'opacity-50' : ''
             }`}
             onDragEnter={handleDragEnter}
             onDragOver={(e) => e.preventDefault()}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
+            onClick={triggerFileInput}
           >
             <div
               className={`border-2 border-dashed rounded-xl p-10 flex flex-col items-center justify-center transition-all ${
@@ -318,8 +322,9 @@ const FileManagementApp = () => {
                   ? 'Drop your file here'
                   : 'Drag & drop your file here'}
               </h3>
-              <p className="text-gray-500 text-sm mb-4">or</p>
-              <label className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium px-6 py-3 rounded-lg cursor-pointer hover:shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1">
+              <p className="text-gray-500 text-sm mb-4">or click to browse</p>
+              <label className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium px-6 py-3 rounded-lg cursor-pointer hover:shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1 ">
+                {/* Hidden browse button */}
                 Browse Files
                 <input
                   type="file"
