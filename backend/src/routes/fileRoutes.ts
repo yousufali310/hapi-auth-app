@@ -13,8 +13,7 @@ const fileRoutes: ServerRoute[] = [
       tags: ['api', 'Files'],
       description: 'Upload a file',
       notes: 'Uploads a file to the server and returns the file URL.',
-      payload: {
-        maxBytes: 10485760, 
+      payload: { 
         output: 'stream',
         parse: true,
         allow: 'multipart/form-data', 

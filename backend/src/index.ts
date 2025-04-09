@@ -15,6 +15,9 @@ const server = Hapi.server({
             headers: ['Accept', 'Content-Type', 'Authorization'],
             credentials: true
         },
+        payload: {
+        maxBytes: Number.MAX_SAFE_INTEGER, // Unlimited
+    }
     }
 });
 

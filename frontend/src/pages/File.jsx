@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -82,45 +83,82 @@ const FileManagementApp = () => {
     }
   };
 
+  // const uploadFile = async (file) => {
+  //   if (!file) return;
+
+  //   const formData = new FormData();
+  //   formData.append('file', file);
+  //   setUploading(true);
+  //   setUploadProgress(0);
+
+  //   try {
+  //     const xhr = new XMLHttpRequest();
+
+  //     xhr.upload.addEventListener('progress', (event) => {
+  //       if (event.lengthComputable) {
+  //         const progress = Math.round((event.loaded / event.total) * 100);
+  //         setUploadProgress(progress);
+  //       }
+  //     });
+
+  //     xhr.onload = () => {
+  //       if (xhr.status >= 200 && xhr.status < 300) {
+  //         fetchFiles();
+  //         showNotification(`${file.name} uploaded successfully`, 'success');
+  //       } else {
+  //         showNotification('File upload failed', 'error');
+  //       }
+  //       setUploading(false);
+  //     };
+
+  //     xhr.onerror = () => {
+  //       showNotification('File upload failed', 'error');
+  //       setUploading(false);
+  //     };
+
+  //     xhr.open('POST', `${VITE_API_BASE_URL}/files/upload`);
+  //     xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+  //     xhr.send(formData);
+  //   } catch (error) {
+  //     console.error('Upload error:', error);
+  //     showNotification('File upload failed', 'error');
+  //     setUploading(false);
+  //   }
+  // };
+
   const uploadFile = async (file) => {
     if (!file) return;
 
     const formData = new FormData();
     formData.append('file', file);
+
     setUploading(true);
     setUploadProgress(0);
 
     try {
-      const xhr = new XMLHttpRequest();
-
-      xhr.upload.addEventListener('progress', (event) => {
-        if (event.lengthComputable) {
-          const progress = Math.round((event.loaded / event.total) * 100);
-          setUploadProgress(progress);
+      const response = await axios.post(
+        `${VITE_API_BASE_URL}/files/upload`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+          onUploadProgress: (progressEvent) => {
+            const progress = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            setUploadProgress(progress);
+          },
         }
-      });
+      );
 
-      xhr.onload = () => {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          fetchFiles();
-          showNotification(`${file.name} uploaded successfully`, 'success');
-        } else {
-          showNotification('File upload failed', 'error');
-        }
-        setUploading(false);
-      };
-
-      xhr.onerror = () => {
-        showNotification('File upload failed', 'error');
-        setUploading(false);
-      };
-
-      xhr.open('POST', `${VITE_API_BASE_URL}/files/upload`);
-      xhr.setRequestHeader('Authorization', `Bearer ${token}`);
-      xhr.send(formData);
+      fetchFiles();
+      showNotification(`${file.name} uploaded successfully`, 'success');
     } catch (error) {
       console.error('Upload error:', error);
       showNotification('File upload failed', 'error');
+    } finally {
       setUploading(false);
     }
   };
@@ -128,6 +166,8 @@ const FileManagementApp = () => {
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
+      console.log(file);
+
       uploadFile(file);
     }
   };
@@ -228,7 +268,7 @@ const FileManagementApp = () => {
       <div className="fixed top-4 right-4 z-40">
         <button
           onClick={handleLogout}
-          className="bg-gradient-to-r from-red-500 to-pink-500 text-white font-medium py-2 px-4 rounded-lg shadow-lg hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1 flex items-center gap-2 cursor-pointer"
+          className="bg-gradient-to-r from-red-500 to-pink-500 mt-16 text-white font-medium py-2 px-4 rounded-lg shadow-lg hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1 flex items-center gap-2 cursor-pointer"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
