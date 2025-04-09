@@ -19,7 +19,6 @@ export const adminMiddleware: Lifecycle.Method = async (request: Request, h: Res
         if (decoded.role !== 'admin') {
             return h.response({ error: 'Access denied: Admin role required' }).code(403).takeover();
         }
-        console.log(decoded);
         return h.continue;
     } catch (err) {
         const errorMsg = err instanceof TokenExpiredError 

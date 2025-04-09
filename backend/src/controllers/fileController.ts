@@ -5,9 +5,7 @@ export const fileController = {
   uploadFile: async (request: Request, h: ResponseToolkit) => {
     try {
       const { file } = request.payload as any;
-      const fileId = file.hapi.filename;
-      console.log(fileId);
-      
+      const fileId = file.hapi.filename;      
       
       await S3Service.uploadFile(fileId, file._data, file.hapi.headers['content-type']);
 

@@ -70,10 +70,6 @@ export class S3Service {
   
 static async listFiles() {
   const response = await s3.send(new ListObjectsV2Command({ Bucket: BUCKET_NAME }));
-  console.log(response.Contents);
-  console.log(response);
-  
-  
   
   if (!response.Contents || response.Contents.length === 0) {
     return []; 

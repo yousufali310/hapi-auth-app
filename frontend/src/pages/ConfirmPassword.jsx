@@ -1,32 +1,31 @@
-import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import { resetPassword } from "../services/authService"; // Import resetPassword function
-import Button from "../components/Button";
-import { Link } from "react-router-dom";
+import React, { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { resetPassword } from '../services/authService'; // Import resetPassword function
+import Button from '../components/Button';
+import { Link } from 'react-router-dom';
 
 const ConfirmPassword = () => {
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const { token } = useParams();
-  console.log(token);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
+      toast.error('Passwords do not match');
       return;
     }
     setIsLoading(true);
     try {
       const response = await resetPassword(token, { password });
       toast.success(response.data.message);
-      navigate("/login");
+      navigate('/login');
     } catch (error) {
-      toast.error(error.response?.data?.message || "Something went wrong");
+      toast.error(error.response?.data?.message || 'Something went wrong');
     } finally {
       setIsLoading(false);
     }
@@ -69,7 +68,7 @@ const ConfirmPassword = () => {
 
         <div className="mt-6 text-center text-sm">
           <p className="text-gray-600">
-            Need to login?{" "}
+            Need to login?{' '}
             <Link
               to="/login"
               className="text-blue-600 hover:text-blue-700 font-medium"

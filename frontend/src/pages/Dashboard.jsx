@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // Custom Icon Components
 const UserIcon = ({ className }) => (
@@ -65,13 +65,10 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    console.log(storedUser);
+    const storedUser = JSON.parse(localStorage.getItem('user'));
 
     setUser(storedUser);
 
-    
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 60000);
@@ -82,27 +79,27 @@ const Dashboard = () => {
   const handleLogout = () => {
     setIsLoading(true);
     setTimeout(() => {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      navigate("/login");
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      navigate('/login');
     }, 500);
   };
 
   const getGreeting = () => {
     const hour = currentTime.getHours();
-    if (hour < 12) return "Good Morning";
-    if (hour < 18) return "Good Afternoon";
-    return "Good Evening";
+    if (hour < 12) return 'Good Morning';
+    if (hour < 18) return 'Good Afternoon';
+    return 'Good Evening';
   };
 
   const getInitials = (name) => {
     return name
       ? name
-          .split(" ")
+          .split(' ')
           .map((n) => n[0])
-          .join("")
+          .join('')
           .toUpperCase()
-      : "UN";
+      : 'UN';
   };
 
   if (!user) return null;
@@ -110,15 +107,12 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden">
-       
         <div className="bg-blue-50 p-6 border-b border-gray-100">
           <div className="flex items-center space-x-4">
-            
             <div className="w-16 h-16 rounded-full bg-blue-200 flex items-center justify-center text-blue-800 font-bold text-2xl shadow-md">
               {getInitials(user.name)}
             </div>
 
-          
             <div className="flex-1">
               <h1 className="text-2xl font-bold text-gray-800">
                 {getGreeting()}, {user.name}
@@ -126,7 +120,6 @@ const Dashboard = () => {
               <p className="text-sm text-gray-500">{user.email}</p>
             </div>
 
-         
             <button
               onClick={handleLogout}
               disabled={isLoading}
@@ -141,18 +134,15 @@ const Dashboard = () => {
           </div>
         </div>
 
-     
         <div className="p-6 grid grid-cols-2 gap-4">
-         
           <div className="bg-blue-50 p-4 rounded-lg flex items-center space-x-3">
             <UserIcon className="w-6 h-6 text-blue-600" />
             <div>
               <p className="text-xs text-gray-500">User ID</p>
-              <p className="font-semibold text-blue-800">{user.id || "N/A"}</p>
+              <p className="font-semibold text-blue-800">{user.id || 'N/A'}</p>
             </div>
           </div>
 
-          
           <div className="bg-green-50 p-4 rounded-lg flex items-center space-x-3">
             <ClockIcon className="w-6 h-6 text-green-600" />
             <div>

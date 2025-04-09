@@ -3,7 +3,6 @@ import pool from '../config/db.js';
 import bcrypt from 'bcrypt';
 import { sendEmail } from '../utils/emailHelper.js';
 
-
 import { QueryResult } from 'pg';
 
 export interface User {
@@ -12,6 +11,8 @@ export interface User {
     reset_token?: string | null;
     reset_token_expiry?: Date | null;
 }
+
+const FRONREND_URL = process.env.FRONTEND_URL;
 
 export const requestPasswordReset = async (email: string) => {
     const result: QueryResult = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
@@ -25,7 +26,7 @@ export const requestPasswordReset = async (email: string) => {
         [resetToken, resetTokenExpiry, email]
     );
 
-    const resetUrl = `http://localhost:5173/confirm-password/${resetToken}`;
+    const resetUrl = `${FRONREND_URL}/confirm-password/${resetToken}`;
     await sendEmail({
             to: email,  
             subject: 'Password Reset Request',

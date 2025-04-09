@@ -11,6 +11,8 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const FileManagementApp = () => {
   const [files, setFiles] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
@@ -41,7 +43,7 @@ const FileManagementApp = () => {
 
   const fetchFiles = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/files', {
+      const response = await fetch(`${VITE_API_BASE_URL}/files`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -113,7 +115,7 @@ const FileManagementApp = () => {
         setUploading(false);
       };
 
-      xhr.open('POST', 'http://localhost:5000/api/files/upload');
+      xhr.open('POST', `${VITE_API_BASE_URL}/files/upload`);
       xhr.setRequestHeader('Authorization', `Bearer ${token}`);
       xhr.send(formData);
     } catch (error) {
@@ -137,15 +139,12 @@ const FileManagementApp = () => {
     if (!window.confirm('Are you sure you want to delete this file?')) return;
 
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/files/${fileId}`,
-        {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`${VITE_API_BASE_URL}/files/${fileId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (response.ok) {
         fetchFiles();
@@ -161,7 +160,6 @@ const FileManagementApp = () => {
 
   const handleDownload = async (file) => {
     try {
-      console.log(file);
       showNotification('Downloading file...', 'info');
 
       const response = await fetch(file.url, { mode: 'cors' });
@@ -187,7 +185,11 @@ const FileManagementApp = () => {
   };
 
   const showNotification = (message, type = 'info') => {
-    toast.success(message);
+    if (type === 'error') {
+      toast.error(message);
+    } else {
+      toast.success(message);
+    }
   };
 
   const getFileIcon = (fileName) => {
@@ -223,38 +225,6 @@ const FileManagementApp = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 p-6">
       {/* Notification System */}
-      <div className="fixed top-4 right-4 z-50 flex flex-col gap-2">
-        {notifications.map((notification) => (
-          <div
-            key={notification.id}
-            className={`px-4 py-3 rounded-lg shadow-lg flex items-center justify-between max-w-md transition-all animate-slideIn ${
-              notification.type === 'success'
-                ? 'bg-green-100 border-l-4 border-green-500 text-green-700'
-                : notification.type === 'error'
-                ? 'bg-red-100 border-l-4 border-red-500 text-red-700'
-                : 'bg-blue-100 border-l-4 border-blue-500 text-blue-700'
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              {notification.type === 'success' && <CheckCircle size={18} />}
-              {notification.type === 'error' && <AlertCircle size={18} />}
-              {notification.type === 'info' && <File size={18} />}
-              <p>{notification.message}</p>
-            </div>
-            <button
-              onClick={() =>
-                setNotifications((prev) =>
-                  prev.filter((item) => item.id !== notification.id)
-                )
-              }
-              className="text-gray-400 hover:text-gray-600 cursor-pointer"
-            >
-              <X size={16} />
-            </button>
-          </div>
-        ))}
-      </div>
-
       <div className="fixed top-4 right-4 z-40">
         <button
           onClick={handleLogout}

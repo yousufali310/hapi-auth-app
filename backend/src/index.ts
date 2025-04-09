@@ -8,7 +8,7 @@ import swaggerPlugins from './config/swagger.js'
 
 const server = Hapi.server({
     port: process.env.PORT || 8000,
-    host: 'localhost',
+    host: process.env.HOST || '0.0.0.0',
     routes: {
         cors: {
             origin: ['*'],
