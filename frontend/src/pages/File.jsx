@@ -24,6 +24,8 @@ const FileManagementApp = () => {
   const dropAreaRef = useRef(null);
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
+  const user = JSON.parse(localStorage.getItem('user'));
+  const userEmail = user?.email || '';
 
   useEffect(() => {
     fetchFiles();
@@ -46,6 +48,7 @@ const FileManagementApp = () => {
     try {
       const response = await fetch(`${VITE_API_BASE_URL}/files`, {
         method: 'POST',
+        body: JSON.stringify({ email: userEmail }),
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -131,6 +134,7 @@ const FileManagementApp = () => {
 
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('email', userEmail);
 
     setUploading(true);
     setUploadProgress(0);
@@ -264,7 +268,6 @@ const FileManagementApp = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 p-6">
-      {/* Notification System */}
       <div className="fixed top-4 right-4 z-40">
         <button
           onClick={handleLogout}

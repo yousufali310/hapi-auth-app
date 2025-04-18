@@ -41,7 +41,9 @@ export const authMiddleware: Lifecycle.Method = async (request: Request, h: Resp
     try {
         const token = authHeader.split(' ')[1];
         const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as jwt.JwtPayload;
-        // request.auth = { user: decoded }; 
+        // request = { user: decoded }; 
+        //  request.app.user = decoded;
+        request.auth.credentials = decoded; // Attach the decoded token to the request object
         return h.continue;
     } catch (err) {
         const errorMsg = err instanceof TokenExpiredError 

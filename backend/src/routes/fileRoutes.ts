@@ -2,6 +2,7 @@ import { ServerRoute } from '@hapi/hapi';
 import { fileController } from '../controllers/fileController.js';
 import { authMiddleware } from '../middleware/adminMiddleware.js'; 
 import Joi from 'joi';
+import { emit } from 'process';
 
 
 const fileRoutes: ServerRoute[] = [
@@ -13,7 +14,7 @@ const fileRoutes: ServerRoute[] = [
       tags: ['api', 'Files'],
       description: 'Upload a file',
       notes: 'Uploads a file to the server and returns the file URL.',
-      payload: { 
+      payload: {
         output: 'stream',
         parse: true,
         allow: 'multipart/form-data', 
@@ -25,6 +26,10 @@ const fileRoutes: ServerRoute[] = [
             .meta({ swaggerType: 'file' }) 
             .description('File to be uploaded')
             .required(),
+            email: Joi.string()
+        .email()
+          .optional()
+          .description('Optional email'),
         }).unknown(true) 
       },
       response: {

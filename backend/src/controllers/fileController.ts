@@ -1,13 +1,15 @@
 import { Request, ResponseToolkit } from '@hapi/hapi';
 import { S3Service } from '../services/s3Service.js';
+import { console } from 'inspector';
 
 export const fileController = {
   uploadFile: async (request: Request, h: ResponseToolkit) => {
     try {
-      const { file } = request.payload as any;
+      const { file,email } = request.payload as any;
       const fileId = file.hapi.filename;      
+
       
-      await S3Service.uploadFile(fileId, file._data, file.hapi.headers['content-type']);
+      await S3Service.uploadFile(fileId, file._data,email, file.hapi.headers['content-type']);
 
       return h.response({
         success: true,
@@ -22,7 +24,9 @@ export const fileController = {
 
   listFiles: async (_request: Request, h: ResponseToolkit) => {
     try {
-      const files = await S3Service.listFiles();
+      
+      const email = _request.auth.credentials.email; // Extract email from the request object    
+      const files = await S3Service.listFiles(email);
       return h.response({ files }).code(200);
     } catch (error) {
       console.error("List Files Error:", error);
@@ -43,8 +47,8 @@ export const fileController = {
    deleteFile: async (request: Request, h: ResponseToolkit) => {
     try {
       const { fileId } = request.params;
-      
-      await S3Service.deleteFile(fileId);
+       const email =request.auth.credentials.email;
+      await S3Service.deleteFile(fileId,email);
 
       return h.response({ success: true, message: 'File deleted successfully' }).code(200);
     } catch (error) {

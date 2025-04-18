@@ -11,15 +11,16 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 export class S3Service {
   
-  static async uploadFile(fileId: string, fileData: Buffer, contentType: string) {
+  static async uploadFile(fileId: string, fileData: Buffer,email:string, contentType: string) {
     const partSize = 5 * 1024 * 1024; 
     let partNumber = 1;
     const parts: { ETag: string; PartNumber: number }[] = [];
-
+  
+    const s3Key = `${email}/${fileId}`;
     const createUpload = await s3.send(
       new CreateMultipartUploadCommand({
         Bucket: BUCKET_NAME,
-        Key: fileId,
+        Key: s3Key,
         ContentType: contentType,
       })
     );
@@ -34,7 +35,7 @@ export class S3Service {
       const uploadPartResponse = await s3.send(
         new UploadPartCommand({
           Bucket: BUCKET_NAME,
-          Key: fileId,
+          Key: s3Key,
           PartNumber: partNumber,
           UploadId: uploadId,
           Body: partBuffer,
@@ -48,7 +49,7 @@ export class S3Service {
     await s3.send(
       new CompleteMultipartUploadCommand({
         Bucket: BUCKET_NAME,
-        Key: fileId,
+        Key: s3Key,
         UploadId: uploadId,
         MultipartUpload: { Parts: parts },
       })
@@ -68,30 +69,43 @@ export class S3Service {
   }
 
   
-static async listFiles() {
-  const response = await s3.send(new ListObjectsV2Command({ Bucket: BUCKET_NAME }));
-  
+static async listFiles(email: any) {
+  console.log("Listing files for:", email);
+
+  const response = await s3.send(
+    new ListObjectsV2Command({ Bucket: BUCKET_NAME })
+  );
+
   if (!response.Contents || response.Contents.length === 0) {
-    return []; 
+    return [];
   }
 
   return Promise.all(
-    response.Contents.map(async (file) => ({
-      fileId: file.Key,
-      size: file.Size,
-      lastModified: file.LastModified,
-      url: await this.generateDownloadUrl(file.Key!),
-    }))
+    response.Contents
+      .filter((file) => file.Key?.startsWith(`${email}/`)) 
+      .map(async (file) => {
+        const fileName = file.Key!.replace(`${email}/`, ''); 
+        return {
+          fileId: fileName,
+          size: file.Size,
+          lastModified: file.LastModified,
+          url: await this.generateDownloadUrl(file.Key!), 
+        };
+      })
   );
 }
 
 
   
-  static async deleteFile(fileId: string) {
+  static async deleteFile(fileId: string,email: any) {
+    console.log("Deleting file:", fileId);
+    console.log(email);
+    
+    const fileKey = `${email}/${fileId}`;
     await s3.send(
       new DeleteObjectCommand({
         Bucket: BUCKET_NAME,
-        Key: fileId,
+        Key: fileKey,
       })
     );
   }
